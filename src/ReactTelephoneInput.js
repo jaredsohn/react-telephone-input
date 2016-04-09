@@ -81,7 +81,7 @@ var ReactTelephoneInput = React.createClass({
         autoFormat: React.PropTypes.bool,
         defaultCountry: React.PropTypes.string,
         onlyCountries: React.PropTypes.arrayOf(React.PropTypes.object),
-        preferredCountries: React.PropTypes.arrayOf(React.PropTypes.object),
+        preferredCountries: React.PropTypes.arrayOf(string),
         onChange: React.PropTypes.func,
         onCountryChange: React.PropTypes.func,
         onEnterKeyPress: React.PropTypes.func
