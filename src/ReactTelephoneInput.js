@@ -23,6 +23,7 @@ var onClickOutside = require('react-onclickoutside');
 var classNames = require('classnames');
 var countryData = require('./country_data');
 var allCountries = countryData.allCountries;
+var allCountriesIso2Lookup = countryData.allCountriesIso2Lookup;
 
 if (typeof document !== 'undefined') {
   var isModernBrowser = Boolean(document.createElement('input').setSelectionRange);
@@ -59,11 +60,10 @@ var ReactTelephoneInput = React.createClass({
         var formattedNumber = this.formatNumber(inputNumber.replace(/\D/g, ''), selectedCountryGuess ? selectedCountryGuess.format : null);
         var preferredCountries = [];
 
-        preferredCountries = filter(allCountries, function(country) {
-            return any(this.props.preferredCountries, function(preferredCountry) {
-                return preferredCountry === country.iso2;
-            });
-        }, this);
+        preferredCountries = this.props.preferredCountries.map(iso2 => {
+            return allCountriesIso2Lookup.hasOwnProperty(iso2) ? allCountries[allCountriesIso2Lookup[iso2]] : null;
+        });
+        // TODO: filter out nulls
 
         return {
             preferredCountries: preferredCountries,
@@ -81,7 +81,7 @@ var ReactTelephoneInput = React.createClass({
         autoFormat: React.PropTypes.bool,
         defaultCountry: React.PropTypes.string,
         onlyCountries: React.PropTypes.arrayOf(React.PropTypes.object),
-        preferredCountries: React.PropTypes.arrayOf(string),
+        preferredCountries: React.PropTypes.arrayOf(React.PropTypes.string),
         onChange: React.PropTypes.func,
         onCountryChange: React.PropTypes.func,
         onEnterKeyPress: React.PropTypes.func
@@ -91,6 +91,7 @@ var ReactTelephoneInput = React.createClass({
             value: '',
             autoFormat: true,
             onlyCountries: allCountries,
+            preferredCountries: [],
             defaultCountry: allCountries[1].iso2,
             isValid: isNumberValid,
             flagsImagePath: 'flags.png',
@@ -428,7 +429,6 @@ var ReactTelephoneInput = React.createClass({
         }
     },
     getCountryDropDownList() {
-
         var countryDropDownList = map(this.state.preferredCountries.concat(this.props.onlyCountries), function(country, index) {
             let itemClasses = classNames({
                 country: true,
