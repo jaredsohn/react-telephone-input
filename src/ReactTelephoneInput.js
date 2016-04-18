@@ -62,8 +62,7 @@ var ReactTelephoneInput = React.createClass({
 
         preferredCountries = this.props.preferredCountries.map(iso2 => {
             return allCountriesIso2Lookup.hasOwnProperty(iso2) ? allCountries[allCountriesIso2Lookup[iso2]] : null;
-        });
-        // TODO: filter out nulls
+        }).filter(function(val) { return val !== null; });
 
         return {
             preferredCountries: preferredCountries,
